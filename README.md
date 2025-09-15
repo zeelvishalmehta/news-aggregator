@@ -1,10 +1,10 @@
-##📰 News Aggregator (Laravel Backend)
+## 📰 News Aggregator (Laravel Backend)
 
 A backend system built with Laravel that aggregates news from multiple external APIs (NewsAPI, The Guardian, New York Times), stores them locally, and exposes REST API endpoints for search, filtering, and retrieval.
 
 ---
 
-🚀 Features
+## 🚀 Features
 - Fetch articles from external sources (NewsAPI, Guardian, New York Times).
 - Store articles with relationships (Source, Author, Category).
 - Protected API endpoints with Laravel Sanctum authentication.
@@ -15,7 +15,7 @@ A backend system built with Laravel that aggregates news from multiple external 
 
 ---
 
-⚙️ Setup Instructions
+## ⚙️ Setup Instructions
 
 1) Clone the repository
    ```bash
@@ -62,7 +62,7 @@ A backend system built with Laravel that aggregates news from multiple external 
 
 ---
 
-🔑 Authentication & Token
+## 🔑 Authentication & Token
 
 All API endpoints are protected with Sanctum authentication.
 
@@ -96,7 +96,7 @@ This will output a valid token for the given user.
 
 ---
 
-📡 API Endpoints
+## 📡 API Endpoints
 
 1. Start local server
    ```bash
@@ -127,14 +127,14 @@ This will output a valid token for the given user.
 
 ---
 
-🧪 Running Tests
+## 🧪 Running Tests
 
 ```bash
 php artisan test
 ```
 ---
 
-✅ Notes
+## ✅ Notes
 
 - Requires MySQL database.
 
