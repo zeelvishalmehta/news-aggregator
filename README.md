@@ -153,7 +153,7 @@ Request body:
 {
   "preferred_sources": ["newsapi", "guardian"],
   "preferred_categories": ["sports", "technology"],
-  "preferred_authors": ["John Doe", "Jane Smith"]
+  "preferred_authors": ["Adam"]
 }
 ```
 
@@ -167,7 +167,7 @@ Response:
     "user_id": 1,
     "preferred_sources": ["newsapi", "guardian"],
     "preferred_categories": ["sports", "technology"],
-    "preferred_authors": ["John Doe", "Jane Smith"]
+    "preferred_authors": ["Adam"]
   }
 }
 ```
