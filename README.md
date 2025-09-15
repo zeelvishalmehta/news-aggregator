@@ -2,7 +2,20 @@
 
 A backend system built with Laravel that aggregates news from multiple external APIs (NewsAPI, The Guardian, New York Times), stores them locally, and exposes REST API endpoints for search, filtering, and retrieval.
 
+----
+
+## 🛠 Requirements
+
+- PHP >= 8.1
+
+- Laravel 10.x
+
+- Composer >= 2.0
+
+- MySQL >= 8.0
+
 ---
+
 
 ## 🚀 Features
 - Fetch articles from external sources (NewsAPI, Guardian, New York Times).
