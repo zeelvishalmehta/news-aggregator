@@ -47,7 +47,6 @@ class Handler extends ExceptionHandler
         ], 401);
     }
 
-    // Otherwise, fallback to redirect (web)
     return redirect()->guest(route('login'));
 }
 

@@ -55,12 +55,12 @@ class GuardianService
     {
         $authorId = null;
 
-        // 1️⃣ Check fields.byline first
+        // Check fields.byline first
         if (!empty($data['fields']['byline'])) {
             $author = Author::firstOrCreate(['name' => $data['fields']['byline']]);
             $authorId = $author->id;
         }
-        // 2️⃣ Check tags for contributor
+        //  Check tags for contributor
         elseif (!empty($data['tags'])) {
             foreach ($data['tags'] as $tag) {
                 if (isset($tag['type']) && $tag['type'] === 'contributor') {
@@ -70,7 +70,7 @@ class GuardianService
                 }
             }
         }
-        // 3️⃣ Fallback
+
         if (!$authorId) {
             $author = Author::firstOrCreate(['name' => 'Unknown Author']);
             $authorId = $author->id;
@@ -84,7 +84,7 @@ class GuardianService
 
         $slug = !empty($data['webTitle']) ? Str::slug($data['webTitle']) : null;
 
-        // Save Article
+        // Save  Or Update Article
         Article::updateOrCreate(
             [
                 'source_id' => $this->source->id,

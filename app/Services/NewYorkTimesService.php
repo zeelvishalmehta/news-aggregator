@@ -32,7 +32,7 @@ class NewYorkTimesService
             'api-key' => $this->apiKey,
         ];
 
-        // Example endpoint: Top Stories API
+        
         $response = Http::get($this->baseUrl . 'topstories/v2/home.json', $params);
 
         if (!$response->successful()) {
@@ -52,7 +52,7 @@ class NewYorkTimesService
     {
         $authorId = null;
 
-        // Handle author
+        // Author
         if (!empty($data['byline'])) {
             $authorName = str_replace('By ', '', $data['byline']); // remove "By "
             $author = Author::firstOrCreate(['name' => $authorName]);
@@ -71,7 +71,7 @@ class NewYorkTimesService
 
         $slug = !empty($data['title']) ? Str::slug($data['title']) : null;
 
-        // Image URL (take first multimedia if available)
+        // Image URL 
         $imageUrl = null;
         if (!empty($data['multimedia']) && is_array($data['multimedia'])) {
             foreach ($data['multimedia'] as $media) {
@@ -81,6 +81,8 @@ class NewYorkTimesService
                 }
             }
         }
+
+        //Save Or Update Article
 
         Article::updateOrCreate(
             [

@@ -27,7 +27,7 @@ class ArticleControllerTest extends TestCase
         // Create a user for authenticated tests
         $this->user = User::factory()->create();
 
-        // Base related models
+        // models
         $this->source   = Source::factory()->create(['slug' => 'newsapi', 'name' => 'NewsAPI']);
         $this->category = Category::factory()->create(['slug' => 'sports', 'name' => 'Sports']);
         $this->author   = Author::factory()->create(['name' => 'John Doe']);
@@ -44,6 +44,8 @@ class ArticleControllerTest extends TestCase
     }
 
     /** @test */
+
+    //If token is not generated
     public function it_requires_authentication_for_api_routes()
     {
         $response = $this->getJson('/api/articles');
@@ -127,7 +129,7 @@ class ArticleControllerTest extends TestCase
         $response->assertStatus(200);
         $this->assertNotEmpty($response->json('data.data'));
 
-        // Date range filter (today)
+        // Date range filter
         $today = now()->toDateString();
         $response = $this->getJson("/api/articles?date_from={$today}&date_to={$today}");
         $response->assertStatus(200);
@@ -145,9 +147,9 @@ class ArticleControllerTest extends TestCase
                 'category_id' => $this->category->id,
                 'author_id'   => $this->author->id,
             ])
-            ->create(['title' => 'Laravel Testing Best Practices']);
+            ->create(['title' => 'Best UK universities for education – league table']);
 
-        $response = $this->getJson("/api/articles?q=Laravel Testing Best Practices");
+        $response = $this->getJson("/api/articles?q=Best UK universities for education – league table");
         $response->assertStatus(200);
         $this->assertNotEmpty($response->json('data.data'));
     }
@@ -163,7 +165,7 @@ class ArticleControllerTest extends TestCase
                 'category_id' => $this->category->id,
                 'author_id'   => $this->author->id,
             ])
-            ->create(['title' => 'Unique Article Title']);
+            ->create(['title' => 'We ask the experts']);
 
         $response = $this->getJson("/api/articles/{$article->id}");
         $response->assertStatus(200)
