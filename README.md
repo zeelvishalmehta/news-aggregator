@@ -121,18 +121,17 @@ This will output a valid token for the given user.
 
    ⚠️ Without a valid token you’ll get:
     
-      ```bash
-     {"status":"error","message":"Unauthenticated."}    
+     {"status":"error","message":"Unauthenticated."}
+     
 
 ---
-
 
 🧪 Running Tests
 
 Run the unit/feature tests:
+
 ```bash
     php artisan test
-
 
 ---
 
