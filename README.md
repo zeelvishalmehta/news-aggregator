@@ -74,9 +74,11 @@ Use the token in Postman or curl:
 2️⃣ Generate Token via CLI (after user exists)
 
 You can generate a token without Tinker:
+
     php artisan token:generate {user_id}
 
 Example:
+
     php artisan token:generate 1
 
 This will output a valid token for the given user.
@@ -91,6 +93,7 @@ This will output a valid token for the given user.
 2. Visit endpoints
 
     - GET /api/articles → Get paginated articles
+      
         ** Filters: ?source=newsapi, ?category=sports, ?author=John, ?date_from=2025-09-01&date_to=2025-09-14
 
     - GET /api/articles/{id} → Get a single article by ID
@@ -98,6 +101,7 @@ This will output a valid token for the given user.
     - GET /api/articles?q=keyword → Search articles by keyword
 
     - If accessed  without API token, you may see
+      
         {"status":"error","message":"Unauthenticated."}
 
 ---
@@ -105,6 +109,7 @@ This will output a valid token for the given user.
 🧪 Running Tests
 
 Run the unit/feature tests:
+
     php artisan test
 
 ---
