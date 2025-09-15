@@ -36,7 +36,9 @@ A backend system built with Laravel that aggregates news from multiple external 
     - API keys (NEWS_API_KEY, GUARDIAN_KEY, NYT_KEY)
 
         NEWSAPI_KEY=06f967dd085d4803a7ba01623a62fa24
+      
         GUARDIAN_KEY=6c269efa-1859-4009-be2d-3b53d256bc22
+      
         NYT_KEY=rPnqsAiNcIJaX5qX1i3AMeSygRvsM4AT
 
 7. Run migrations 
