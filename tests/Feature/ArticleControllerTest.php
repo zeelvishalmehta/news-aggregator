@@ -10,6 +10,8 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
+use App\Models\UserPreference;
+
 
 class ArticleControllerTest extends TestCase
 {
@@ -187,4 +189,52 @@ class ArticleControllerTest extends TestCase
                      ],
                  ]);
     }
+
+
+    //when a user has preferences, articles from those preferences appear first in results
+
+    /** @test */
+public function it_prioritizes_articles_based_on_user_preferences()
+{
+    Sanctum::actingAs($this->user, ['*']);
+
+    // Create another source, category, and author (non-preferred)
+    $otherSource   = Source::factory()->create(['slug' => 'guardian', 'name' => 'The Guardian']);
+    $otherCategory = Category::factory()->create(['slug' => 'technology', 'name' => 'Technology']);
+    $otherAuthor   = Author::factory()->create(['name' => 'Jane Smith']);
+
+    // Create one preferred article
+    $preferredArticle = Article::factory()->withRelations([
+        'source_id'   => $this->source->id,   
+        'category_id' => $this->category->id, 
+        'author_id'   => $this->author->id,   
+    ])->create(['title' => 'Preferred Article']);
+
+    // Create one non-preferred article
+    $otherArticle = Article::factory()->withRelations([
+        'source_id'   => $otherSource->id,
+        'category_id' => $otherCategory->id,
+        'author_id'   => $otherAuthor->id,
+    ])->create(['title' => 'Other Article']);
+
+    UserPreference::create([
+        'user_id'             => $this->user->id,
+        'preferred_sources'   => ['newsapi'],
+        'preferred_categories'=> ['sports'],
+        'preferred_authors'   => ['Adam'],
+    ]);
+
+    $response = $this->getJson('/api/articles?per_page=2');
+
+    $response->assertStatus(200);
+
+    $articles = $response->json('data.data');
+
+    // Check both articles exist
+    $this->assertCount(2, $articles);
+
+    // preferred article is ranked before non-preferred
+    $this->assertEquals('Preferred Article', $articles[0]['title']);
+}
+
 }

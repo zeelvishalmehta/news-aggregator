@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\PreferenceController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -25,3 +27,11 @@ Route::post('/articles/fetch', function () {
         'message' => 'Articles fetched successfully',
     ]);
 })->middleware('auth:sanctum');
+
+//UserPreference 
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('preferences', [PreferenceController::class, 'show']);
+    Route::post('preferences', [PreferenceController::class, 'store']);
+    Route::delete('preferences', [PreferenceController::class, 'destroy']);
+});
