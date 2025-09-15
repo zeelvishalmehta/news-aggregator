@@ -181,9 +181,11 @@ Authorization: Bearer <token>
 
 ### Behavior
 
-- Articles from preferred sources, categories, and authors are ranked higher in /api/articles.
+- Preferred articles are ranked higher in /api/articles.
 
-- Non-preferred articles are still returned (no filtering out).
+- Articles outside preferences are still visible → ensuring no content is lost.
+
+- Users can update preferences anytime using the same POST /api/preferences endpoint.
 
 
 ---
