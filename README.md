@@ -37,23 +37,24 @@ A backend system built with Laravel that aggregates news from multiple external 
 
 5) Update .env file
    
-    - Database credentials
+    - Set your MySQL database credentials
       
     - API keys (NEWS_API_KEY, GUARDIAN_KEY, NYT_KEY)
-        
+         ```bash
         NEWSAPI_KEY=06f967dd085d4803a7ba01623a62fa24
       
         GUARDIAN_KEY=6c269efa-1859-4009-be2d-3b53d256bc22
       
         NYT_KEY=rPnqsAiNcIJaX5qX1i3AMeSygRvsM4AT
 
-6) Run migrations
-   ```bash
-   php artisan migrate
+6) Database setup
 
-7) Seed initial data
+   ✅ No DB dump is required.
+   ✅ Tables and seed data will be created automatically.
+   
    ```bash
-   php artisan db:seed
+   php artisan migrate --seed
+   
 
 8) Fetch articles from external APIs
    ```bash
@@ -63,7 +64,7 @@ A backend system built with Laravel that aggregates news from multiple external 
 
 🔑 Authentication & Token
 
-All article endpoints require authentication.
+All API endpoints are protected with Sanctum authentication.
 
 1️⃣ First-time Setup (via Tinker)
 
@@ -98,29 +99,36 @@ This will output a valid token for the given user.
 📡 API Endpoints
 
 1. Start local server
-   
+   ```bash
     php artisan serve
 
-3. Visit endpoints
+2. Endpoints
 
     - GET /api/articles → Get paginated articles
       
-        ** Filters: ?source=newsapi, ?category=sports, ?author=John, ?date_from=2025-09-01&date_to=2025-09-14
+    Filters supported:
+   
+    ```bash
+    ?source=newsapi
+    ?category=sports
+    ?author=Adam
+    ?date_from=2025-09-01&date_to=2025-09-14
 
     - GET /api/articles/{id} → Get a single article by ID
 
     - GET /api/articles?q=keyword → Search articles by keyword
 
-    - If accessed  without API token, you may see
-      
-        {"status":"error","message":"Unauthenticated."}
+   ⚠️ Without a valid token you’ll get:
+    
+      ```bash
+     {"status":"error","message":"Unauthenticated."}
 
 ---
 
 🧪 Running Tests
 
 Run the unit/feature tests:
-
+```bash
     php artisan test
 
 ---
