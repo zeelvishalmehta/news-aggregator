@@ -5,7 +5,7 @@ A backend system built with Laravel that aggregates news from multiple external 
 ---
 
 🚀 Features
-- Fetch articles from 3+ external sources (NewsAPI, Guardian, New York Times).
+- Fetch articles from external sources (NewsAPI, Guardian, New York Times).
 - Store articles with relationships (Source, Author, Category).
 - Protected API endpoints with Laravel Sanctum authentication.
 - Filtering by category, source, author, and date.
@@ -18,7 +18,7 @@ A backend system built with Laravel that aggregates news from multiple external 
 ⚙️ Setup Instructions
 
 1) Clone the repository
-   
+   ```bash
    git clone https://github.com/zeelvishalmehta/news-aggregator.git
    
    cd news-aggregator
