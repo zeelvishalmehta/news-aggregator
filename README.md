@@ -127,6 +127,68 @@ This will output a valid token for the given user.
 
 ---
 
+## 👤 User Preferences
+
+The system supports soft preferences, allowing each authenticated user to prioritize their content:
+
+    - Preferred Sources → e.g., NewsAPI, Guardian
+
+    - Preferred Categories → e.g., Sports, Technology
+
+    - Preferred Authors → e.g., Adam
+
+## Endpoints
+
+Save / Update Preferences
+
+```bash
+POST /api/preferences
+Authorization: Bearer <token>
+Accept: application/json
+```
+
+Request body:
+
+```bash
+{
+  "preferred_sources": ["newsapi", "guardian"],
+  "preferred_categories": ["sports", "technology"],
+  "preferred_authors": ["John Doe", "Jane Smith"]
+}
+```
+
+Response:
+
+```bash
+{
+  "status": "success",
+  "message": "Preferences updated successfully",
+  "data": {
+    "user_id": 1,
+    "preferred_sources": ["newsapi", "guardian"],
+    "preferred_categories": ["sports", "technology"],
+    "preferred_authors": ["John Doe", "Jane Smith"]
+  }
+}
+```
+
+### Get Preferences
+
+```bash
+GET /api/preferences
+Authorization: Bearer <token>
+```
+
+### Behavior
+
+- Articles from preferred sources, categories, and authors are ranked higher in /api/articles.
+
+- Non-preferred articles are still returned (no filtering out).
+
+
+---
+
+
 ## 🧪 Running Tests
 
 ```bash
