@@ -128,18 +128,5 @@ This will output a valid token for the given user.
 
 🧪 Running Tests
 
-Run the unit/feature tests:
-
 ```bash
-    php artisan test
-
----
-
-✅ Notes
-
-- If any API is down, the fetch process continues for other sources (handled with try-catch).
-
-- Missing values (like description/image) are stored as null.
-
-- Tokens must be passed in the Authorization: Bearer <token> header for all API calls.
-
+php artisan test
