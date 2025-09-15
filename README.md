@@ -130,3 +130,15 @@ This will output a valid token for the given user.
 
 ```bash
 php artisan test
+
+---
+
+✅ Notes
+
+- Requires MySQL database.
+
+- If an API is down, fetch will continue for other sources (handled with try-catch).
+
+- Missing values (like description/image) are stored as null.
+
+- Tokens must always be passed in the Authorization: Bearer <token> header.
