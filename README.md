@@ -42,14 +42,15 @@ A backend system built with Laravel that aggregates news from multiple external 
     - API keys (NEWS_API_KEY, GUARDIAN_KEY, NYT_KEY)
          ```bash
         NEWSAPI_KEY=06f967dd085d4803a7ba01623a62fa24
-      
+         
         GUARDIAN_KEY=6c269efa-1859-4009-be2d-3b53d256bc22
-      
+         
         NYT_KEY=rPnqsAiNcIJaX5qX1i3AMeSygRvsM4AT
 
 6) Database setup
 
    ✅ No DB dump is required.
+   
    ✅ Tables and seed data will be created automatically.
    
    ```bash
@@ -113,15 +114,18 @@ This will output a valid token for the given user.
     ?category=sports
     ?author=Adam
     ?date_from=2025-09-01&date_to=2025-09-14
+    
 
     - GET /api/articles/{id} → Get a single article by ID
 
     - GET /api/articles?q=keyword → Search articles by keyword
+    
 
    ⚠️ Without a valid token you’ll get:
     
       ```bash
      {"status":"error","message":"Unauthenticated."}
+    
 
 ---
 
