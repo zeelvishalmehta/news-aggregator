@@ -61,14 +61,9 @@ All article endpoints require authentication.
 
 Inside Tinker:
 
-    $user = \App\Models\User::create([
-   'name' => 'Test User',
-   'email' => 'test@example.com',
-   'password' => bcrypt('password'),
-]);
-
-$token = $user->createToken('TestToken')->plainTextToken;
-echo $token;
+    $user = \App\Models\User::create(['name' => 'Test User','email' => 'test@example.com','password' => bcrypt('password'),]);
+    $token = $user->createToken('TestToken')->plainTextToken;    
+    echo $token;
 
 Use the token in Postman or curl:
 
