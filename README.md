@@ -19,18 +19,19 @@ A backend system built with Laravel that aggregates news from multiple external 
 
 1. Clone the repository
     git clone https://github.com/zeelvishalmehta/news-aggregator.git
+   
     cd news-aggregator
 
-2. Install dependencies
+3. Install dependencies
     composer install
 
-3. Copy .env file
+4. Copy .env file
     cp .env.example .env
 
-4. Generate application key
+5. Generate application key
     php artisan key:generate
 
-5. Update .env file
+6. Update .env file
     - Database credentials
     - API keys (NEWS_API_KEY, GUARDIAN_KEY, NYT_KEY)
 
@@ -38,10 +39,10 @@ A backend system built with Laravel that aggregates news from multiple external 
         GUARDIAN_KEY=6c269efa-1859-4009-be2d-3b53d256bc22
         NYT_KEY=rPnqsAiNcIJaX5qX1i3AMeSygRvsM4AT
 
-6. Run migrations 
+7. Run migrations 
     php artisan migrate
 
-7. Seed initial data
+8. Seed initial data
     php artisan db:seed
 
 7. Fetch articles from external APIs
