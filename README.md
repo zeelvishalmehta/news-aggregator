@@ -1,11 +1,11 @@
-📰 News Aggregator (Laravel Backend)
+## 📰 News Aggregator (Laravel Backend)
 
 A backend system built with Laravel that aggregates news from multiple external APIs (NewsAPI, The Guardian, New York Times), stores them locally, and exposes REST API endpoints for search, filtering, and retrieval.
 
 ---
 
-🚀 Features
-- Fetch articles from 3+ external sources (NewsAPI, Guardian, New York Times).
+## 🚀 Features
+- Fetch articles from external sources (NewsAPI, Guardian, New York Times).
 - Store articles with relationships (Source, Author, Category).
 - Protected API endpoints with Laravel Sanctum authentication.
 - Filtering by category, source, author, and date.
@@ -15,57 +15,66 @@ A backend system built with Laravel that aggregates news from multiple external 
 
 ---
 
-⚙️ Setup Instructions
+## ⚙️ Setup Instructions
 
-1. Clone the repository
-    git clone https://github.com/zeelvishalmehta/news-aggregator.git
-    cd news-aggregator
+1) Clone the repository
+   ```bash
+   git clone https://github.com/zeelvishalmehta/news-aggregator.git
+   
+   cd news-aggregator
 
-2. Install dependencies
-    composer install
+2) Install dependencies
+   ```bash
+   composer install
 
-3. Copy .env file
-    cp .env.example .env
+3) Copy .env file
+   ```bash
+   cp .env.example .env
 
-4. Generate application key
-    php artisan key:generate
+4) Generate application key
+   ```bash
+   php artisan key:generate
 
-5. Update .env file
-    - Database credentials
+5) Update .env file
+   
+    - Set your MySQL database credentials
+      
     - API keys (NEWS_API_KEY, GUARDIAN_KEY, NYT_KEY)
-
+         ```bash
         NEWSAPI_KEY=06f967dd085d4803a7ba01623a62fa24
+         
         GUARDIAN_KEY=6c269efa-1859-4009-be2d-3b53d256bc22
+         
         NYT_KEY=rPnqsAiNcIJaX5qX1i3AMeSygRvsM4AT
 
-6. Run migrations 
-    php artisan migrate
+6) Database setup
 
-7. Seed initial data
-    php artisan db:seed
+   ✅ No DB dump is required.
+   
+   ✅ Tables and seed data will be created automatically.
+   
+   ```bash
+   php artisan migrate --seed   
 
-7. Fetch articles from external APIs
-    php artisan app:fetch-articles
+8) Fetch articles from external APIs
+   ```bash
+   php artisan app:fetch-articles
 
 ---
 
-🔑 Authentication & Token
+## 🔑 Authentication & Token
 
-All article endpoints require authentication.
+All API endpoints are protected with Sanctum authentication.
 
 1️⃣ First-time Setup (via Tinker)
+
     php artisan tinker
 
 Inside Tinker:
 
-    $user = \App\Models\User::create([
-   'name' => 'Test User',
-   'email' => 'test@example.com',
-   'password' => bcrypt('password'),
-]);
-
-$token = $user->createToken('TestToken')->plainTextToken;
-echo $token;
+    $user = \App\Models\User::create(['name' => 'Test User','email' => 'test@example.com','password' => bcrypt('password'),]);
+    $token = $user->createToken('TestToken')->plainTextToken;    
+    echo $token;
 
 Use the token in Postman or curl:
 
@@ -76,46 +85,126 @@ Use the token in Postman or curl:
 2️⃣ Generate Token via CLI (after user exists)
 
 You can generate a token without Tinker:
+
     php artisan token:generate {user_id}
 
 Example:
+
     php artisan token:generate 1
 
 This will output a valid token for the given user.
 
 ---
 
-📡 API Endpoints
+## 📡 API Endpoints
 
 1. Start local server
+   ```bash
     php artisan serve
 
-2. Visit endpoints
+2. Endpoints
 
     - GET /api/articles → Get paginated articles
-        ** Filters: ?source=newsapi, ?category=sports, ?author=John, ?date_from=2025-09-01&date_to=2025-09-14
+      
+    Filters supported:
+   
+    ```bash
+    ?source=newsapi
+    ?category=sports
+    ?author=Adam
+    ?date_from=2025-09-01&date_to=2025-09-14
+    ```
 
     - GET /api/articles/{id} → Get a single article by ID
 
     - GET /api/articles?q=keyword → Search articles by keyword
+    
 
-    - If accessed  without API token, you may see
-        {"status":"error","message":"Unauthenticated."}
-
----
-
-🧪 Running Tests
-
-Run the unit/feature tests:
-    php artisan test
+   ⚠️ Without a valid token you’ll get:
+    
+     {"status":"error","message":"Unauthenticated."}
+     
 
 ---
 
-✅ Notes
+## 👤 User Preferences
 
-- If any API is down, the fetch process continues for other sources (handled with try-catch).
+The system supports soft preferences, allowing each authenticated user to prioritize their content:
+
+- Preferred Sources → e.g., NewsAPI, Guardian
+
+- Preferred Categories → e.g., Sports, Technology
+
+- Preferred Authors → e.g., Adam
+
+## Endpoints
+
+Save / Update Preferences
+
+```bash
+POST /api/preferences
+Authorization: Bearer <token>
+Accept: application/json
+```
+
+Request body:
+
+```bash
+{
+  "preferred_sources": ["newsapi", "guardian"],
+  "preferred_categories": ["sports", "technology"],
+  "preferred_authors": ["John Doe", "Jane Smith"]
+}
+```
+
+Response:
+
+```bash
+{
+  "status": "success",
+  "message": "Preferences updated successfully",
+  "data": {
+    "user_id": 1,
+    "preferred_sources": ["newsapi", "guardian"],
+    "preferred_categories": ["sports", "technology"],
+    "preferred_authors": ["John Doe", "Jane Smith"]
+  }
+}
+```
+
+### Get Preferences
+
+```bash
+GET /api/preferences
+Authorization: Bearer <token>
+```
+
+### Behavior
+
+- Preferred articles are ranked higher in /api/articles.
+
+- Articles outside preferences are still visible → ensuring no content is lost.
+
+- Users can update preferences anytime using the same POST /api/preferences endpoint.
+
+
+---
+
+
+## 🧪 Running Tests
+
+```bash
+php artisan test
+```
+
+---
+
+## ✅ Notes
+
+- Requires MySQL database.
+
+- If an API is down, fetch will continue for other sources (handled with try-catch).
 
 - Missing values (like description/image) are stored as null.
 
-- Tokens must be passed in the Authorization: Bearer <token> header for all API calls.
-
+- Tokens must always be passed in the Authorization: Bearer <token> header.
