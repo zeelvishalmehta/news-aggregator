@@ -54,8 +54,7 @@ A backend system built with Laravel that aggregates news from multiple external 
    ✅ Tables and seed data will be created automatically.
    
    ```bash
-   php artisan migrate --seed
-   
+   php artisan migrate --seed   
 
 8) Fetch articles from external APIs
    ```bash
@@ -109,7 +108,6 @@ This will output a valid token for the given user.
       
     Filters supported:
    
-    ```bash
     ?source=newsapi
     ?category=sports
     ?author=Adam
@@ -124,16 +122,17 @@ This will output a valid token for the given user.
    ⚠️ Without a valid token you’ll get:
     
       ```bash
-     {"status":"error","message":"Unauthenticated."}
-    
+     {"status":"error","message":"Unauthenticated."}    
 
 ---
+
 
 🧪 Running Tests
 
 Run the unit/feature tests:
 ```bash
     php artisan test
+
 
 ---
 
