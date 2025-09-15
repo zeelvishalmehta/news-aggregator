@@ -108,11 +108,12 @@ This will output a valid token for the given user.
       
     Filters supported:
    
+    ```bash
     ?source=newsapi
     ?category=sports
     ?author=Adam
     ?date_from=2025-09-01&date_to=2025-09-14
-    
+    ```
 
     - GET /api/articles/{id} → Get a single article by ID
 
@@ -130,7 +131,7 @@ This will output a valid token for the given user.
 
 ```bash
 php artisan test
-
+```
 ---
 
 ✅ Notes
