@@ -131,11 +131,11 @@ This will output a valid token for the given user.
 
 The system supports soft preferences, allowing each authenticated user to prioritize their content:
 
-    - Preferred Sources → e.g., NewsAPI, Guardian
+- Preferred Sources → e.g., NewsAPI, Guardian
 
-    - Preferred Categories → e.g., Sports, Technology
+- Preferred Categories → e.g., Sports, Technology
 
-    - Preferred Authors → e.g., Adam
+- Preferred Authors → e.g., Adam
 
 ## Endpoints
 
@@ -194,6 +194,7 @@ Authorization: Bearer <token>
 ```bash
 php artisan test
 ```
+
 ---
 
 ## ✅ Notes
