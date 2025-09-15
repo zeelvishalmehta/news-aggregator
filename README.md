@@ -41,11 +41,11 @@ A backend system built with Laravel that aggregates news from multiple external 
       
     - API keys (NEWS_API_KEY, GUARDIAN_KEY, NYT_KEY)
          ```bash
-        NEWSAPI_KEY=06f967dd085d4803a7ba01623a62fa24
+        NEWSAPI_KEY=Your_API_Key
          
-        GUARDIAN_KEY=6c269efa-1859-4009-be2d-3b53d256bc22
+        GUARDIAN_KEY=Your_API_Key
          
-        NYT_KEY=rPnqsAiNcIJaX5qX1i3AMeSygRvsM4AT
+        NYT_KEY=Your_API_Key
 
 6) Database setup
 
@@ -153,7 +153,7 @@ Request body:
 {
   "preferred_sources": ["newsapi", "guardian"],
   "preferred_categories": ["sports", "technology"],
-  "preferred_authors": ["John Doe", "Jane Smith"]
+  "preferred_authors": ["Adam"]
 }
 ```
 
@@ -167,7 +167,7 @@ Response:
     "user_id": 1,
     "preferred_sources": ["newsapi", "guardian"],
     "preferred_categories": ["sports", "technology"],
-    "preferred_authors": ["John Doe", "Jane Smith"]
+    "preferred_authors": ["Adam"]
   }
 }
 ```
@@ -187,6 +187,18 @@ Authorization: Bearer <token>
 
 - Users can update preferences anytime using the same POST /api/preferences endpoint.
 
+
+---
+
+
+## ⚡ Caching
+
+To improve performance and reduce database load, API responses for '/api/articles' are cached.
+
+- Cache driver can be configured in `.env` (default: `file`).
+- Each user’s query (filters + search + page + preferences) generates a unique cache key.
+- Cache lifetime: **10 minutes**.
+  
 
 ---
 

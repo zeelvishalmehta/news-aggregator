@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Validation\ValidationException;
 use App\Models\UserPreference;
-
+use Illuminate\Support\Facades\Cache; // <-- add this
 
 class ArticleController extends Controller
 {
@@ -21,7 +21,6 @@ class ArticleController extends Controller
      */
     public function index(Request $request)
     {
-        // Validate query parameters
         try {
             $request->validate([
                 'source' => 'sometimes|string|max:255',
@@ -39,82 +38,79 @@ class ArticleController extends Controller
             ], 422);
         }
 
-        $query = Article::query()->with(['author', 'category', 'source']);
+        $perPage = (int) $request->get('per_page', 10);
 
-        // Filter by source (slug or name)
-        if ($request->filled('source')) {
-            $query->whereHas('source', function ($q) use ($request) {
-                $q->where('slug', $request->source)
-                    ->orWhere('name', 'like', "%{$request->source}%");
-            });
-        }
+        // Build unique cache key based on user + filters
+        $cacheKey = 'articles_' . auth()->id() . '_' . md5(json_encode($request->all())) . "_page_" . $request->get('page', 1);
 
-        // Filter by category (slug or name)
-        if ($request->filled('category')) {
-            $query->whereHas('category', function ($q) use ($request) {
-                $q->where('slug', $request->category)
-                    ->orWhere('name', 'like', "%{$request->category}%");
-            });
-        }
+        $articles = Cache::remember($cacheKey, now()->addMinutes(10), function () use ($request, $perPage) {
+            $query = Article::query()->with(['author', 'category', 'source']);
 
-        // Filter by author name
-        if ($request->filled('author')) {
-            $query->whereHas('author', function ($q) use ($request) {
-                $q->where('name', 'like', "%{$request->author}%");
-            });
-        }
-
-        // Filter by published date range
-        if ($request->filled('date_from')) {
-            $from = Carbon::parse($request->date_from)->startOfDay();
-            $query->where('published_at', '>=', $from);
-        }
-
-        if ($request->filled('date_to')) {
-            $to = Carbon::parse($request->date_to)->endOfDay();
-            $query->where('published_at', '<=', $to);
-        }
-
-        // Search in title, description, content
-        if ($request->filled('q')) {
-            $search = $request->q;
-            $query->where(function ($q) use ($search) {
-                $q->where('title', 'like', "%{$search}%")
-                    ->orWhere('description', 'like', "%{$search}%")
-                    ->orWhere('content', 'like', "%{$search}%");
-            });
-        }
-
-
-        if (auth()->check()) {
-            $prefs = UserPreference::where('user_id', auth()->id())->first();
-
-            if ($prefs) {
-
-                if (!empty($prefs->preferred_sources)) {
-                    $slugs = collect($prefs->preferred_sources)->map(fn($s) => "'$s'")->join(',');
-                    $query->join('sources', 'articles.source_id', '=', 'sources.id')
-                        ->orderByRaw("FIELD(sources.slug, $slugs) DESC");
-                }
-
-                if (!empty($prefs->preferred_categories)) {
-                    $slugs = collect($prefs->preferred_categories)->map(fn($s) => "'$s'")->join(',');
-                    $query->join('categories', 'articles.category_id', '=', 'categories.id')
-                        ->orderByRaw("FIELD(categories.slug, $slugs) DESC");
-                }
-
-                if (!empty($prefs->preferred_authors)) {
-                    $names = collect($prefs->preferred_authors)->map(fn($n) => "'$n'")->join(',');
-                    $query->join('authors', 'articles.author_id', '=', 'authors.id')
-                        ->orderByRaw("FIELD(authors.name, $names) DESC");
-                }
-
+            if ($request->filled('source')) {
+                $query->whereHas('source', function ($q) use ($request) {
+                    $q->where('slug', $request->source)
+                      ->orWhere('name', 'like', "%{$request->source}%");
+                });
             }
 
-        }
-        // Pagination
-        $perPage = (int) $request->get('per_page', 10);
-        $articles = $query->orderBy('published_at', 'desc')->paginate($perPage);
+            if ($request->filled('category')) {
+                $query->whereHas('category', function ($q) use ($request) {
+                    $q->where('slug', $request->category)
+                      ->orWhere('name', 'like', "%{$request->category}%");
+                });
+            }
+
+            if ($request->filled('author')) {
+                $query->whereHas('author', function ($q) use ($request) {
+                    $q->where('name', 'like', "%{$request->author}%");
+                });
+            }
+
+            if ($request->filled('date_from')) {
+                $from = Carbon::parse($request->date_from)->startOfDay();
+                $query->where('published_at', '>=', $from);
+            }
+
+            if ($request->filled('date_to')) {
+                $to = Carbon::parse($request->date_to)->endOfDay();
+                $query->where('published_at', '<=', $to);
+            }
+
+            if ($request->filled('q')) {
+                $search = $request->q;
+                $query->where(function ($q) use ($search) {
+                    $q->where('title', 'like', "%{$search}%")
+                      ->orWhere('description', 'like', "%{$search}%")
+                      ->orWhere('content', 'like', "%{$search}%");
+                });
+            }
+
+            if (auth()->check()) {
+                $prefs = UserPreference::where('user_id', auth()->id())->first();
+
+                if ($prefs) {
+                    if (!empty($prefs->preferred_sources)) {
+                        $slugs = collect($prefs->preferred_sources)->map(fn($s) => "'$s'")->join(',');
+                        $query->join('sources', 'articles.source_id', '=', 'sources.id')
+                              ->orderByRaw("FIELD(sources.slug, $slugs) DESC");
+                    }
+
+                    if (!empty($prefs->preferred_categories)) {
+                        $slugs = collect($prefs->preferred_categories)->map(fn($s) => "'$s'")->join(',');
+                        $query->join('categories', 'articles.category_id', '=', 'categories.id')
+                              ->orderByRaw("FIELD(categories.slug, $slugs) DESC");
+                    }
+
+                    if (!empty($prefs->preferred_authors)) {
+                        $names = collect($prefs->preferred_authors)->map(fn($n) => "'$n'")->join(',');
+                        $query->join('authors', 'articles.author_id', '=', 'authors.id')
+                              ->orderByRaw("FIELD(authors.name, $names) DESC");
+                    }
+                }
+            }
+
+            return $query->orderBy('published_at', 'desc')->paginate($perPage);
+        });
 
         return response()->json([
             'status' => 'success',
@@ -127,7 +123,11 @@ class ArticleController extends Controller
      */
     public function show($id)
     {
-        $article = Article::with(['author', 'category', 'source'])->find($id);
+        $cacheKey = "article_$id";
+
+        $article = Cache::remember($cacheKey, now()->addMinutes(30), function () use ($id) {
+            return Article::with(['author', 'category', 'source'])->find($id);
+        });
 
         if (!$article) {
             return response()->json([
